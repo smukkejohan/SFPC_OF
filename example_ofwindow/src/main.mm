@@ -8,14 +8,13 @@
 int main()
 {
 	
-	
 	MSA::ofxCocoa::InitSettings			initSettings;
 	initSettings.isOpaque				= true;
 	initSettings.windowLevel			= kCGMaximumWindowLevelKey;
 	initSettings.hasWindowShadow		= false;
 	initSettings.numFSAASamples			= true;
 	initSettings.initRect.size.width	= 1900;
-	initSettings.initRect.size.height	= 1200;
+	initSettings.initRect.size.height	= 1050;
     initSettings.initRect.origin.x      = 0;
     initSettings.initRect.origin.y      = 0;
     
@@ -25,7 +24,6 @@ int main()
 	//initSettings.windowStyle			= NSBorderlessWindowMask;
 	//initSettings.initRect				= MSA::ofxCocoa::rectForMainScreen();
 //	initSettings.initRect				= MSA::ofxCocoa::rectForAllScreens();
-
     
     MSA::ofxCocoa::setSyncToDisplayLink(true);
     MSA::ofxCocoa::setCaptureExternalMouseEvents(true);

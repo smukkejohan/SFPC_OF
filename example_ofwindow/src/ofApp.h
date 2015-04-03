@@ -2,8 +2,7 @@
 #include "ofMain.h"
 #include "screenGrab.h"
 #include "ofxCocoa.h"
-
-
+#include "ofxCv.h"
 
 class ofApp : public ofBaseApp {
 
@@ -25,29 +24,32 @@ class ofApp : public ofBaseApp {
 		void mousePressed(int x, int y, int button);
 		void mouseReleased(int x, int y, int button);
 		void windowResized(int w, int h);
-    
+
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
         ofPoint easedMouse;
     
         ScreenGrab screenGrabber;
-    
         //MSA::ofxCocoa::Events cocoEvents;
-    
         //cocoaEvents cevents;
     
         float mX;
         float mY;
-    int grabwidth;
+        int grabwidth;
     
-    ofVec2f screenPos;
-    ofVec2f windowPos;
-    
-    
+        ofVec2f screenPos;
+        ofVec2f windowPos;
     
         bool hasFocus = true;
     
-        //ofVec2f screenPos
+     ofPixels pix;
+    
+    
+    ofxCv::ContourFinder contourFinder;
+    float threshold;
+    ofxCv::TrackingColorMode trackingColorMode;
+    ofColor targetColor;
+    
 };
 
