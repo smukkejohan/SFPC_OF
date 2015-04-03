@@ -43,13 +43,14 @@ class ofApp : public ofBaseApp {
     
         bool hasFocus = true;
     
+
      ofPixels pix;
     
-    
+    ofColor targetColor;
     ofxCv::ContourFinder contourFinder;
     float threshold;
-    ofxCv::TrackingColorMode trackingColorMode;
-    ofColor targetColor;
+    //ofxCv::TrackingColorMode trackingColorMode;
+    //ofColor targetColor;
     
 };
 

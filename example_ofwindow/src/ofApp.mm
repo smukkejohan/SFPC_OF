@@ -9,8 +9,6 @@ using namespace cv;
 void ofApp::setup(){
     setWindowTransparent();
     
-    threshold = 20;
-    
     grabwidth = 350;
     //NSWindow
     
@@ -35,7 +33,9 @@ void ofApp::setup(){
     
     
     contourFinder.setMinAreaRadius(10);
-    contourFinder.setMaxAreaRadius(150);
+    contourFinder.setMaxAreaRadius(200);
+    
+    contourFinder.setUseTargetColor(true);
     
 }
 
@@ -54,31 +54,64 @@ void ofApp::draw(){
     ofRect(mX - 50, mY - 50, 100, 100);
     */
     
+    ofSetColor(255, 255, 255);
+    
     int x = ofClamp(screenPos.x, 0, ofGetScreenWidth()-grabwidth/2);
     int y = ofClamp(screenPos.y, 0, ofGetScreenHeight()-grabwidth/2);
     screenGrabber.grabScreen(x-grabwidth/2, y-grabwidth/2);
     
     screenGrabber.getTextureReference().readToPixels(pix);
     
+    threshold = 110;
     
-    threshold = ofMap(mouseX, 0, ofGetWidth(), 0, 255);
+    targetColor = pix.getColor(grabwidth, grabwidth);
+    
+    contourFinder.setTargetColor(targetColor);
+    
     contourFinder.setThreshold(threshold);
     contourFinder.findContours(pix);
-    
-    
     
     ofRectMode(OF_RECTMODE_CORNER);
     ofTranslate(windowPos.x-grabwidth/2,windowPos.y-grabwidth/2);
     screenGrabber.draw(0,0);
     
-    
     ofPushMatrix();
     
     ofScale(0.5, 0.5);
-    contourFinder.draw();
+    //contourFinder.draw();
+    
+    
+    //mesh.clear();
+    
+    contourFinder.setSortBySize(true);
+    contourFinder.setAutoThreshold(true);
+    
+    // todo some masking
+    int n = contourFinder.size();
+    for(int i = 0; i < n ; i++) {
+    
+        ofPolyline line = contourFinder.getPolyline(i);
+        
+        //line.draw();
+        ofMesh mesh;
+        mesh.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
+        ofFill();
+        
+        ofSetColor(pix.getColor(contourFinder.getCentroid(i).x, contourFinder.getCentroid(i).y));
+        
+        for(int v=0; v<line.size(); v++) {
+            mesh.addVertex(ofVec3f(line[v].x, line[v].y, 0));
+        }
+        
+        mesh.draw();
+    }
 
     
     ofPopMatrix();
+    
+    //ofSetColor(targetColor);
+    //ofRect(-40+grabwidth/2,-40+grabwidth/2,40,40);
+    
     
     //cout<<mX<<" "<<mY<<endl;
 }

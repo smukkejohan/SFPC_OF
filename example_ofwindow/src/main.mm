@@ -13,7 +13,7 @@ int main()
 	initSettings.windowLevel			= kCGMaximumWindowLevelKey;
 	initSettings.hasWindowShadow		= false;
 	initSettings.numFSAASamples			= true;
-	initSettings.initRect.size.width	= 1900;
+	initSettings.initRect.size.width	= 1600;
 	initSettings.initRect.size.height	= 1050;
     initSettings.initRect.origin.x      = 0;
     initSettings.initRect.origin.y      = 0;
