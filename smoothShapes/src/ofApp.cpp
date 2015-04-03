@@ -17,7 +17,6 @@ void ofApp::setup(){
     smoothrect.lineTo(1-cd, -1);
     smoothrect.bezierTo(1, -1, 1, -1, 1, -1+cd, smoothness);
     
-    
     // to 1,1
     smoothrect.lineTo(1, 1-cd);
     smoothrect.bezierTo(1, 1, 1, 1, 1-cd, 1, smoothness);
@@ -36,7 +35,6 @@ void ofApp::setup(){
         smoothRectAsMesh.addVertex(smoothrect[i]);
         //smoothRectAsMesh.addVertex(smoothrect[i]*1.1);
     }
-    
     
     smoothRectHollowAsMesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
     for(int i=0; i<smoothrect.size(); i++) {

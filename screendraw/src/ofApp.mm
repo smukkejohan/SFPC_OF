@@ -6,15 +6,15 @@ void ofApp::setup(){
     bool retina = true;
     
     
-    radius = 120;
-    maxRadius = 200;
+    radius = 120.0;
+    maxRadius = 200.0;
 
     /* setup a grab window, same size as the app */
-    grabber.setup(maxRadius, maxRadius, retina);
+    grabber.setup(maxRadius*2, maxRadius*2, retina);
     
     canvas.allocate(ofGetScreenWidth(), ofGetScreenHeight());
     
-    int numPts  = 10;
+    int numPts  = 20;
     float angle = 0.0;
     float step  = TWO_PI / (float)(numPts-1);
 
@@ -29,8 +29,8 @@ void ofApp::setup(){
         NormCirclePts.push_back( ofPoint(px, py) );
         //map the -1 to 1 range produced by cos/sin
         //to the dimensions of the image we need for our texture coords
-        float tx = ofMap( px, -1.0, 1.0, 0, maxRadius) ;
-        float ty = ofMap( py, -1.0, 1.0, 0, maxRadius) ;
+        float tx = ofMap( px, -1.0, 1.0, 0, maxRadius*2) ;
+        float ty = ofMap( py, -1.0, 1.0, 0, maxRadius*2) ;
         //float d = ofRandom(-circleTexture.getWidth()/2, circleTexture.getWidth()/2);
         //float d = 0;
         NormCircleCoords.push_back( ofPoint(tx, ty) );
@@ -45,6 +45,7 @@ void ofApp::setup(){
     //frame =
     
     
+    MacGLUTFix(true);
 
     
 }
@@ -53,14 +54,20 @@ void ofApp::setup(){
 void ofApp::update(){
     /* grab screen starting at (0, 0) */
     
-
+    // TODO fix the corners
+    
+    int x = -maxRadius+mouseX+ofGetWindowPositionX();
+    int y = -maxRadius+mouseY+ofGetWindowPositionY();
+    
+    grabber.grabScreen(max(0,x), max(0,y));
+    
+    
+    radius = 120 + ofSignedNoise(ofGetElapsedTimef()) * 20;
 }
 
 //------------------------------------------------- -------------
 void ofApp::draw(){
 
-    /* or you can get the texture directly */
-    
     
     while(frames.size() < maxFrames) {
         frames.push_back(Frame());
@@ -73,10 +80,10 @@ void ofApp::draw(){
     
     int currentFrame = ofGetFrameNum() % maxFrames;
     
-    cout<<currentFrame<<endl;
+    //cout<<currentFrame<<endl;
     
     
-    frames[currentFrame].begin();{
+    /*frames[currentFrame].begin();{
         
         if(ofGetMousePressed()) {
         ofPushMatrix();
@@ -94,24 +101,28 @@ void ofApp::draw(){
         }
         
         
-    }frames[currentFrame].end();
+    }frames[currentFrame].end();*/
 
-    
-    frames[currentFrame].draw(0,0);
+    //frames[currentFrame].draw(0,0);
+
     
     // Feedback draw not saved
     
     ofPushMatrix();
     ofTranslate(mouseX, mouseY);
-
-    tex.bind();
+    
+    // draw brush shapes using a shader
+    grabber.draw(-maxRadius, -maxRadius);
+    
+    /*tex.bind();
     glBegin(GL_POLYGON); {
         for(int i = 0; i < NormCirclePts.size(); i++){
-            glTexCoord2f(NormCircleCoords[i].x, NormCircleCoords[i].y);
+            glTexCoord2f(NormCircleCoords[i].x * radius/maxRadius*2, NormCircleCoords[i].y * radius/maxRadius*2);
+            
             glVertex2f( NormCirclePts[i].x * radius,  NormCirclePts[i].y * radius);
         }
     } glEnd();
-    tex.unbind();
+    tex.unbind();*/
     
     ofPopMatrix();
     
@@ -120,10 +131,9 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     
-        grabber.grabScreen(max(0,-radius+mouseX+ofGetWindowPositionX()), max(0,-radius+mouseY+ofGetWindowPositionY()));
     
-    
-    cout<<"grab"<<endl;
+    // todo handle corners
+    //cout<<"grab"<<endl;
     ofPixels pix;
     grabber.getTextureReference().readToPixels(pix);
     tex.loadData(pix);
