@@ -20,12 +20,14 @@ void ScreenGrab::setup(int width, int height, bool retina) {
 //-------------
 void ScreenGrab::grabScreen(int x, int y) {
     unsigned char * data = pixelsBelowWindow(x, y, width, height);
+    if (data!= NULL) {
     for (int i = 0; i < rx*rx*width*height; i++){
         unsigned char r1 = data[i*4];
         data[i*4]   = data[i*4+1];
         data[i*4+1] = data[i*4+2];
         data[i*4+2] = data[i*4+3];
         data[i*4+3] = r1;
+    }
     }
     if (data!= NULL) tex.loadData(data, rx*width, rx*height, GL_RGBA);
 }

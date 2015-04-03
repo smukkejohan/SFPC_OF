@@ -5,8 +5,8 @@
 void ofApp::setup(){
     setWindowTransparent();
     
-    
-    //NSWindow
+    grabwidth = 350;
+        //NSWindow
     
     
     MSA::ofxCocoa::setCaptureExternalMouseEvents(true);
@@ -14,7 +14,7 @@ void ofApp::setup(){
     
     ofBackground(0);
     
-    screenGrabber.setup(200, 200, true);
+    screenGrabber.setup(grabwidth, grabwidth, true);
     //cocoaEvents
     
     //ofAddListener(cocoaEvents.mouseMovedOutsideEvent,this,&ofApp::mouseMovedOutside);
@@ -33,12 +33,7 @@ void ofApp::setup(){
 void ofApp::update(){
         
     //easedMouse = easedMouse * .9 + ofPoint(mX, mY) * .1;
-    
-    int x = mX - ofGetWindowPositionX() + 200;
-    int y = mY - ofGetWindowPositionY() + ofGetHeight();
-    
-    screenGrabber.grabScreen(max(0,x), max(0,y));
-
+    // todo check bounds
 
 }
 
@@ -49,11 +44,16 @@ void ofApp::draw(){
     ofSetColor(255);
     ofRect(mX - 50, mY - 50, 100, 100);
     */
-    ofRectMode(OF_RECTMODE_CENTER);
-    screenGrabber.draw(mX,mY);
+    
+    int x = ofClamp(screenPos.x, 0, ofGetScreenWidth()-grabwidth/2);
+    int y = ofClamp(screenPos.y, 0, ofGetScreenHeight()-grabwidth/2);
+    screenGrabber.grabScreen(x-grabwidth/2, y-grabwidth/2);
     
     
-    cout<<mX<<" "<<mY<<endl;
+    ofRectMode(OF_RECTMODE_CORNER);
+    screenGrabber.draw(windowPos.x-grabwidth/2,windowPos.y-grabwidth/2);
+    
+    //cout<<mX<<" "<<mY<<endl;
 }
 
 //--------------------------------------------------------------
@@ -68,18 +68,29 @@ void ofApp::keyReleased(int key){
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
     hasFocus = true;
-    //cout<<x<<y<<endl;
     
-    mX = x-ofGetWindowPositionX();
-    mY = y-ofGetWindowPositionY();
+    windowPos.x = x;
+    windowPos.y = y;
     
-    //cout<<x<<" "<<y<<endl;
+    screenPos.x = x+ofGetWindowPositionX();
+    
+    int dif = ofGetScreenHeight()-ofGetWindowHeight();
+    
+    screenPos.y = y+dif-ofGetWindowPositionY();
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseMovedOutside(ofMouseEventArgs & arg){
-    mX = arg.x-ofGetWindowPositionX() - ofGetWindowPositionX();
-    mY = arg.y-ofGetWindowPositionY() - ofGetHeight()+ofGetWindowPositionY();
+    
+    int dif = ofGetScreenHeight()-ofGetWindowHeight();
+    
+    screenPos.x = arg.x;
+    screenPos.y = arg.y;
+    
+    windowPos.x = arg.x-ofGetWindowPositionX();
+    windowPos.y = arg.y-dif+ofGetWindowPositionY();
+    
     
 }
 

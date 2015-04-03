@@ -39,6 +39,11 @@ class ofApp : public ofBaseApp {
     
         float mX;
         float mY;
+    int grabwidth;
+    
+    ofVec2f screenPos;
+    ofVec2f windowPos;
+    
     
     
         bool hasFocus = true;
