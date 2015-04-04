@@ -1,23 +1,24 @@
 #include "ofApp.h"
 
 
-using namespace ofxCv;
-using namespace cv;
 
 
 //--------------------------------------------------------------
 void ofApp::setup(){
     setWindowTransparent();
     
+    ofSetFrameRate(25);
+    
     grabwidth = 250;
     //NSWindow
     
     MSA::ofxCocoa::setCaptureExternalMouseEvents(true);
+    MSA::ofxCocoa::setTransparent(true);
     //setCaptureExternalMouseEvents(true);
     
-    ofBackground(0);
+    //ofBackground(0);
     
-    screenGrabber.setup(grabwidth, grabwidth, true);
+    screenGrabber.setup(ofGetScreenWidth(), ofGetScreenHeight(), true);
     
     //cocoaEvents
     ofAddListener(cocoaEvents.mouseMovedOutsideEvent,this,&ofApp::mouseMovedOutside);
@@ -29,12 +30,13 @@ void ofApp::setup(){
     //ofRegisterMouseOutside(cocoEvents);
     //ofRegisterMouseEvents(&ofApp);
 
-    pix.allocate(grabwidth, grabwidth, OF_IMAGE_COLOR_ALPHA);
+    //pix.allocate(grabwidth, grabwidth, OF_IMAGE_COLOR_ALPHA);
     
-    contourFinder.setMinAreaRadius(5);
-    contourFinder.setMaxAreaRadius(200);
+    //contourFinder.setMinAreaRadius(5);
+    //contourFinder.setMaxAreaRadius(200);
     
-    contourFinder.setUseTargetColor(false);
+    //contourFinder.setUseTargetColor(false);
+    ofSetBackgroundAuto(false);
     
 }
 
@@ -53,60 +55,24 @@ void ofApp::draw(){
     ofRect(mX - 50, mY - 50, 100, 100);
     */
     
-    ofSetColor(255, 255, 255);
+    ofSetColor(255, 255, 255, 100);
     
     int x = ofClamp(screenPos.x, 0, ofGetScreenWidth()-grabwidth/2);
     int y = ofClamp(screenPos.y, 0, ofGetScreenHeight()-grabwidth/2);
-    screenGrabber.grabScreen(x-grabwidth/2, y-grabwidth/2);
+    screenGrabber.grabScreen(0,0);
     
-    screenGrabber.getTextureReference().readToPixels(pix);
+    ofFbo fbo;
     
-    threshold = 110;
-    
-    targetColor = pix.getColor(grabwidth, grabwidth);
-    
-    contourFinder.setTargetColor(targetColor);
-    
-    contourFinder.setThreshold(threshold);
-    contourFinder.findContours(pix);
-    
+    fbo.allocate(ofGetScreenWidth(), ofGetScreenHeight());
+    fbo.begin();
     ofRectMode(OF_RECTMODE_CORNER);
-    ofTranslate(windowPos.x-grabwidth/2,windowPos.y-grabwidth/2);
-    screenGrabber.draw(0,0);
+    //ofTranslate(windowPos.x-grabwidth/2,windowPos.y-grabwidth/2);
     
-    ofPushMatrix();
+    int dif = ofGetScreenHeight()-ofGetWindowHeight();
+    //screenGrabber.draw(0-ofGetWindowPositionX(),-dif+ofGetWindowPositionY());
+    fbo.end();
     
-    ofScale(0.5, 0.5);
-    //contourFinder.draw();
-    
-    
-    //mesh.clear();
-    
-    contourFinder.setSortBySize(true);
-    contourFinder.setAutoThreshold(true);
-    
-    // todo some masking
-    int n = contourFinder.size();
-    for(int i = 0; i < n ; i++) {
-    
-        ofPolyline line = contourFinder.getPolyline(i);
-        
-        //line.draw();
-        ofMesh mesh;
-        mesh.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
-        ofFill();
-        
-        ofSetColor(pix.getColor(contourFinder.getCentroid(i).x, contourFinder.getCentroid(i).y));
-        
-        for(int v=0; v<line.size(); v++) {
-            mesh.addVertex(ofVec3f(line[v].x, line[v].y, 0));
-        }
-        
-        mesh.draw();
-    }
-
-    
-    ofPopMatrix();
+    fbo.draw(0, 0);
     
     //ofSetColor(targetColor);
     //ofRect(-40+grabwidth/2,-40+grabwidth/2,40,40);
@@ -117,9 +83,7 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    
-    cout<<key<<endl;
-    
+    //cout<<key<<endl;
 }
 
 //--------------------------------------------------------------
@@ -151,8 +115,6 @@ void ofApp::mouseMovedOutside(ofMouseEventArgs & arg){
     
     windowPos.x = arg.x-ofGetWindowPositionX();
     windowPos.y = arg.y-dif+ofGetWindowPositionY();
-    
-    
 }
 
 

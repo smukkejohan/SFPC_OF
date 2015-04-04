@@ -2,7 +2,6 @@
 #include "ofMain.h"
 #include "screenGrab.h"
 #include "ofxCocoa.h"
-#include "ofxCv.h"
 
 class ofApp : public ofBaseApp {
 
@@ -43,13 +42,10 @@ class ofApp : public ofBaseApp {
     
         bool hasFocus = true;
     
-
      ofPixels pix;
-    
     ofTexture roi;
     
     ofColor targetColor;
-    ofxCv::ContourFinder contourFinder;
     float threshold;
     //ofxCv::TrackingColorMode trackingColorMode;
     //ofColor targetColor;
