@@ -16,10 +16,6 @@ scripts/apothecary/build
 # see addons/.gitignore
 addons/*
 
-# rule to avoid non-official apps going into git
-# see apps/.gitignore
-apps/*
-
 # also, see examples/.gitignore
 
 #########################
@@ -107,6 +103,4 @@ Desktop.ini
 #########################
 
 .mailmap
-BGRnd1_0007_Vector Smart Object.jpg
-recursion_eve/bin/data/
 */bin/*
