@@ -7,13 +7,13 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    
+    
+    for(int i=0; i<400; i++) {
+    
     attractor.iterate();
     
-    if(!attractor.drawIt) {
-        //cout<<attractor.type<<endl;
-        attractor = Attractor();
-    }
-    
+
     
     /*if(attractor.I % 200 == 0 && attractor.I > 40000) {
         mesh.clear();
@@ -39,6 +39,16 @@ void ofApp::update(){
         mesh.addVertex(attractor.d[attractor.I]);
         
     }
+    
+    
+    if(!attractor.drawIt) {
+        //cout<<attractor.type<<endl;
+        attractor = Attractor();
+    }
+        
+    }
+    
+    
 
 }
 
