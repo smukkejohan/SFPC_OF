@@ -9,11 +9,9 @@ void ofApp::setup(){
 void ofApp::update(){
     
     
-    for(int i=0; i<400; i++) {
+    //for(int i=0; i<400; i++) {
     
-    attractor.iterate();
-    
-
+    //attractor.iterate();
     
     /*if(attractor.I % 200 == 0 && attractor.I > 40000) {
         mesh.clear();
@@ -26,27 +24,12 @@ void ofApp::update(){
     }*/
     
     
-    if(attractor.I > 100 && attractor.drawIt) {
-    
-        if(mesh.getNumVertices() > attractor.I) {
-            mesh.clear();
-        }
-        
-        /*float x = ofGetWidth() * (attractor.d[i].x - attractor.xmin) / (attractor.xmax-attractor.xmin);
-        float y = ofGetHeight() * (attractor.d[i].y - attractor.ymin) / (attractor.ymax-attractor.ymin);
-        */
-        
-        mesh.addVertex(attractor.d[attractor.I]);
-        
-    }
-    
-    
     if(!attractor.drawIt) {
         //cout<<attractor.type<<endl;
-        attractor = Attractor();
+        attractor.setup();
     }
         
-    }
+    //}
     
     
 
@@ -60,17 +43,24 @@ void ofApp::draw(){
         ofBackground(40,40,40);
         ofSetColor(220,220,220,180);
     
-    //ofTranslate(<#float x#>, <#float y#>)
-        
+    
+    
+    
+    attractor.lock();
+    
         ofPushMatrix();
     ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
     ofScale(400,400);
     
-    mesh.draw();
+    if(attractor.mesh.getNumVertices() > 0) {
+        attractor.mesh.draw();
+    }
+    
         ofPopMatrix();
         
         ofDrawBitmapString(ofToString(attractor.I) + " " + attractor.type + " " + ofToString(attractor.seed), 20,20);
-        
+    
+    attractor.unlock();
     //}
     //}
 }

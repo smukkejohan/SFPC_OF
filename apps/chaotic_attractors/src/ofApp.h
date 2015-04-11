@@ -4,23 +4,25 @@
 #include <math.h>
 
 
-
-struct dimensions {
-    
-};
-
-#define dimensions 2
-
-//
-// class Attractor <dimensions>
-
-class Attractor {
+class Attractor : public ofThread  {
 public:
     
     Attractor() {
         // set the seed
         
+        setup();
+        
+        
+    }
+    
+    
+    void setup() {
+        
+        //stopThread();
+        waitForThread();
+        
         I = 0;
+        mesh.clear();
         
         //dimensions = 2;
         
@@ -29,7 +31,6 @@ public:
         //cout<<"Seed: "<<seed<<endl;
         
         // calculate initial random
-        
         x = 0.1, y = 0.1;		// starting point
         
         lyapunov = 0;
@@ -45,7 +46,6 @@ public:
             ax.push_back(ofRandom(-2, 2));
             ay.push_back(ofRandom(-2, 2));
         }
-
         
         // calculate the attractor
         // first two random values
@@ -53,8 +53,7 @@ public:
         y = ofRandom(-0.5, 0.5);
         
         a(x,y);
-        
-        
+
         d0 = -1;
         while(d0 <= 0) {
             xe = d[0].x + ofRandom(-0.5,0.5) / 1000.0;
@@ -66,74 +65,30 @@ public:
         }
         
         
-        
-        
-        
+        startThread(true);
         
     }
     
-    void iterate() {
-        
-        
-        
-        
-        float nx = ax[0] +
-            ax[1] * d[I-1].x +
-            ax[2] * d[I-1].x * d[I-1].x +
-            ax[3] * d[I-1].x * d[I-1].y +
-            ax[4] * d[I-1].y +
-            ax[5] * d[I-1].y * d[I-1].y;
-        
-        float ny = ay[0] +
-            ay[1] * d[I-1].x +
-            ay[2] * d[I-1].x * d[I-1].x +
-            ay[3] * d[I-1].x * d[I-1].y +
-            ay[4] * d[I-1].y +
-            ay[5] * d[I-1].y * d[I-1].y;
-        
-        a(nx,ny);
-        
-        xenew = ax[0] +
-            ax[1] * xe +
-            ax[2] * xe * xe +
-            ax[3] * xe * ye +
-            ax[4] * ye +
-            ax[5] * ye * ye;
-        
-        yenew = ay[0] +
-            ay[1] * xe + ay[2] * xe * xe +
-            ay[3] * xe * ye +
-            ay[4] * ye +
-            ay[5] * ye * ye;
-        
-        // Update the bounds
-        xmin = min(xmin,d[I].x);
-        ymin = min(ymin,d[I].y);
-        xmax = max(xmax,d[I].x);
-        ymax = max(ymax,d[I].y);
-        
-        
-        classify();
-        
-        
-
-       /* float xm = ofGetWidth() * (nx - xmin) / (xmax-attractor.xmin);
-        float ym = ofGetHeight() * (ny - ymin) / (attractor.ymax-attractor.ymin);
-            
-        mesh.addVertex(ofVec2f(x,y));
-        */
-        
-        
-        I++;
-
-        
-    }
     
+    
+
+    
+    
+    void threadedFunction() {
+        
+        // start
+        
+        while(isThreadRunning()) {
+            lock();
+            iterate();
+            unlock();
+        }
+        
+        // done
+    }
     
     void draw() {
-        
     }
-    
     
     void classify() {
         
@@ -160,9 +115,7 @@ public:
             xe = d[I].x + d0 * dx / dd;
             ye = d[I].y + d0 * dy / dd;
             
-            
             if (drawIt) {
-                
                 if (abs(lyapunov) < 10) {
                     drawIt = false;
                     type = "neutrally stable";
@@ -172,14 +125,13 @@ public:
                 } else {
                     type = "chaotic";
                 }
-
             }
-            
         }
-        
-        
-
-
+    }
+    
+    
+    void exit() {
+        stopThread();
     }
     
     
@@ -206,6 +158,12 @@ public:
     // add a point to our data
     void a(float x, float y) {
         d.push_back(ofVec3f(x,y));
+        mesh.addVertex(ofVec3f(x,y));
+    }
+    
+    
+    ofMesh getMesh() {
+        return mesh; // todo create and cache only when requested
     }
     
     // dimensions
@@ -216,6 +174,53 @@ public:
     string type;
     
     ofMesh mesh;
+    
+    void iterate() {
+        
+        float nx = ax[0] +
+        ax[1] * d[I-1].x +
+        ax[2] * d[I-1].x * d[I-1].x +
+        ax[3] * d[I-1].x * d[I-1].y +
+        ax[4] * d[I-1].y +
+        ax[5] * d[I-1].y * d[I-1].y;
+        
+        float ny = ay[0] +
+        ay[1] * d[I-1].x +
+        ay[2] * d[I-1].x * d[I-1].x +
+        ay[3] * d[I-1].x * d[I-1].y +
+        ay[4] * d[I-1].y +
+        ay[5] * d[I-1].y * d[I-1].y;
+        
+        a(nx,ny);
+        
+        xenew = ax[0] +
+        ax[1] * xe +
+        ax[2] * xe * xe +
+        ax[3] * xe * ye +
+        ax[4] * ye +
+        ax[5] * ye * ye;
+        
+        yenew = ay[0] +
+        ay[1] * xe + ay[2] * xe * xe +
+        ay[3] * xe * ye +
+        ay[4] * ye +
+        ay[5] * ye * ye;
+        
+        // Update the bounds
+        xmin = min(xmin,d[I].x);
+        ymin = min(ymin,d[I].y);
+        xmax = max(xmax,d[I].x);
+        ymax = max(ymax,d[I].y);
+        
+        classify();
+        
+        /* float xm = ofGetWidth() * (nx - xmin) / (xmax-attractor.xmin);
+         float ym = ofGetHeight() * (ny - ymin) / (attractor.ymax-attractor.ymin);
+         mesh.addVertex(ofVec2f(x,y));
+         */
+        
+        I++;
+    }
     
 };
 
