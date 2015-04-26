@@ -3,7 +3,8 @@
 #include "ofMain.h"
 #include "ofxCv.h"
 
-#include "ofxFaceTracker.h"
+//#include "ofxFaceTracker.h"
+#include "ofxFaceTrackerThreaded.h"
 
 #include "ofxKeylogger.h"
 
@@ -91,11 +92,12 @@ class testApp : public ofBaseApp {
 public:
 	void setup();
 	void update();
+    void exit();
 	void draw();
 	void keyPressed(int key);
 	
 	ofVideoGrabber cam;
-	ofxFaceTracker tracker;
+	ofxFaceTrackerThreaded tracker;
 	
 	ofFbo eyeFbo;
 	ofPixels eyePixels;
@@ -118,11 +120,7 @@ public:
     
     ofSerial serial;
     ofImage matrix1;
-    //ofImage matrix2;
-    
     ofFbo matrixFbo1;
-    //ofFbo matrixFbo2;
-    
     ofPixels tmpPix;
     
     ofImage eyeOpen;
@@ -138,7 +136,5 @@ public:
     void onKeyloggerEvent(ofxKeyloggerEvent& ev);
     
     int state;
-    
-    
 	
 };

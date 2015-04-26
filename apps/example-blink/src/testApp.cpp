@@ -38,7 +38,7 @@ void addTexCoords(ofMesh& to, const vector<T>& from) {
 using namespace ofxCv;
 
 void testApp::onKeyloggerEvent(ofxKeyloggerEvent& ev) {
-     		cout << "got key:" << (char)ev.key << endl;
+    //cout << "got key:" << (char)ev.key << endl;
     
     
     message += (char)ev.key;
@@ -48,15 +48,15 @@ void testApp::onKeyloggerEvent(ofxKeyloggerEvent& ev) {
 
 void testApp::setup() {
     
-    ofxKeylogger::addListener(this, &testApp::onKeyloggerEvent);
+      ofxKeylogger::addListener(this, &testApp::onKeyloggerEvent);
     
 	ofSetFrameRate(30);
 	ofSetVerticalSync(true);
 	ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
 	cam.initGrabber(640, 480);
-	
-	tracker.setup();
-	eyeFbo.allocate(128, 48, GL_RGB);
+    
+    tracker.setup();
+    
 	runningMean = 24;
     
     matrix1.allocate(16, 8, OF_IMAGE_GRAYSCALE);
@@ -83,6 +83,8 @@ void testApp::setup() {
     //myfont.loadFont("DCGamer16.ttf", 8);
     
     message = "Hello what is your name?";
+    
+    
     
 }
 
@@ -362,4 +364,8 @@ void testApp::keyPressed(int key) {
 	if(key == 'r') {
 		tracker.reset();
 	}
+}
+
+void testApp::exit() {
+    tracker.waitForThread();
 }
