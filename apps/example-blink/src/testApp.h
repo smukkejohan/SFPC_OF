@@ -115,7 +115,6 @@ public:
 	float scale;
 	ofMatrix4x4 rotationMatrix;
     
-    
     void updateMatrix(int display);
     
     ofSerial serial;

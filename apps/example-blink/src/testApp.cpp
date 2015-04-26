@@ -55,7 +55,9 @@ void testApp::setup() {
 	ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
 	cam.initGrabber(640, 480);
     
-    tracker.setup();
+    
+    eyeFbo.allocate(64*2, 48);
+    //eyePixels.allocate(640, <#int h#>, <#ofImageType type#>)
     
 	runningMean = 24;
     
@@ -85,6 +87,7 @@ void testApp::setup() {
     message = "Hello what is your name?";
     
     
+        tracker.setup();
     
 }
 
