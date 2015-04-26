@@ -57,6 +57,7 @@ void testApp::setup() {
     
     
     eyeFbo.allocate(64*2, 48);
+    sobelImg.allocate(64*2, 48, OF_IMAGE_GRAYSCALE);
     //eyePixels.allocate(640, <#int h#>, <#ofImageType type#>)
     
 	runningMean = 24;
