@@ -3,8 +3,6 @@
 #include "ofMain.h"
 #include <math.h>
 
-
-
 struct dat {
     dat(double _x, double _y) {
         x = _x;
@@ -13,6 +11,10 @@ struct dat {
     
     double x, y;
 };
+
+
+// struct for attractor
+// thread that adds to a vector of theese
 
 #define dimensions 2
 
@@ -34,8 +36,6 @@ public:
         //cout<<"Seed: "<<seed<<endl;
         
         // calculate initial random
-        
-        x = 0.1, y = 0.1;		// starting point
         
         lyapunov = 0;
         
@@ -71,7 +71,7 @@ public:
         }
         
         
-        mesh.setMode(OF_PRIMITIVE_LINE_LOOP);
+        mesh.setMode(OF_PRIMITIVE_LINES);
 
         
     }
@@ -208,7 +208,7 @@ public:
     void a(double x, double y) {
         d.push_back(dat(x,y));
         mesh.addVertex(ofVec2f(x,y));
-        mesh.addColor(ofColor(255,250,250,255));
+        mesh.addColor(ofColor(255,250,250,100));
     }
     
     // dimensions

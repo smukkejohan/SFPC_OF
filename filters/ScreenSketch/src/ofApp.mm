@@ -73,7 +73,7 @@ void ofApp::draw(){
     
     ofRectMode(OF_RECTMODE_CORNER);
     ofTranslate(windowPos.x-grabwidth/2,windowPos.y-grabwidth/2);
-    screenGrabber.draw(0,0);
+    //screenGrabber.draw(0,0);
     
     ofPushMatrix();
     

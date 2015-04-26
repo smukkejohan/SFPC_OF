@@ -9,7 +9,7 @@ void ofApp::setup(){
     
     ofSetFrameRate(25);
     
-    grabwidth = 250;
+    //grabwidth = 250;
     //NSWindow
     
     MSA::ofxCocoa::setCaptureExternalMouseEvents(true);
@@ -72,7 +72,9 @@ void ofApp::draw(){
     //screenGrabber.draw(0-ofGetWindowPositionX(),-dif+ofGetWindowPositionY());
     fbo.end();
     
-    fbo.draw(0, 0);
+    //fbo.draw(0, 0);
+    
+    screenGrabber.draw(0, 0);
     
     //ofSetColor(targetColor);
     //ofRect(-40+grabwidth/2,-40+grabwidth/2,40,40);

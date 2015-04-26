@@ -11,13 +11,16 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     
-    
-    
-    
-    for(int i=0; i<2000; i++) {
+    for(int i=0; i<1000; i++) {
     
     attractor.iterate();
     
+        if (attractor.type == "chaotic") {
+            
+            i+=100;
+            
+        }
+        
     /*if(attractor.I % 200 == 0 && attractor.I > 40000) {
         mesh.clear();
         for(int i=0; i<attractor.d.size(); i++){
@@ -46,7 +49,7 @@ void ofApp::update(){
     
         
         
-    if( !attractor.drawIt || attractor.I > 100000) {
+    if( !attractor.drawIt || attractor.I > 400000) {
         //cout<<attractor.type<<endl;
         /*if(searchChaos)*/ attractor = Attractor();
     }
@@ -79,7 +82,7 @@ void ofApp::draw(){
         
     ofPushMatrix();
     ofTranslate(fbo.getWidth()/2, fbo.getHeight()/2);
-    ofScale(300,300);
+    ofScale(600,600);
     
     
     attractor.draw();
