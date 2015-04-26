@@ -5,6 +5,8 @@
 
 #include "ofxFaceTracker.h"
 
+#include "ofxKeylogger.h"
+
 class Graph {
 public:
 	Graph()
@@ -132,5 +134,11 @@ public:
     
     string message;
     float scanTxt=16;
+    
+    void onKeyloggerEvent(ofxKeyloggerEvent& ev);
+    
+    int state;
+    
+    
 	
 };

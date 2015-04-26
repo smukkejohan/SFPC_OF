@@ -37,7 +37,19 @@ void addTexCoords(ofMesh& to, const vector<T>& from) {
 
 using namespace ofxCv;
 
+void testApp::onKeyloggerEvent(ofxKeyloggerEvent& ev) {
+     		cout << "got key:" << (char)ev.key << endl;
+    
+    
+    message += (char)ev.key;
+    
+    
+}
+
 void testApp::setup() {
+    
+    ofxKeylogger::addListener(this, &testApp::onKeyloggerEvent);
+    
 	ofSetFrameRate(30);
 	ofSetVerticalSync(true);
 	ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
@@ -72,8 +84,6 @@ void testApp::setup() {
     
     message = "Hello what is your name?";
     
-    
-	
 }
 
 void testApp::update() {
@@ -271,28 +281,39 @@ void testApp::draw() {
      glEnd();
      */
     
-    if(rowGraph.getState() == 1) {
-        eyeClosed.draw(0,0, 8, 8);
-        
-        eyeClosed.draw(8,0, 8, 8);
-    } else {
-        //eyeOpen.draw(0, 0, 8, 8);
-        //eyeOpen.draw(8, 0, 8, 8);
+    if(message.length() > 0) {
+    
         ofPushMatrix();
         
         ofTranslate(scanTxt, 0);
         myfont.drawString(message, 0, 8);
         
         ofPopMatrix();
+    
+    } else {
+        
+        if(rowGraph.getState() == 1) {
+            eyeClosed.draw(0,0, 8, 8);
+            eyeClosed.draw(8,0, 8, 8);
+            
+        } else {
+            eyeOpen.draw(0, 0, 8, 8);
+            eyeOpen.draw(8, 0, 8, 8);
+        }
+
+        
         
     }
     
     
-    if(ofGetElapsedTimeMillis()/100 % 2 == 0 ) {
+    
+    
+    if(ofGetElapsedTimeMillis()/50 % 2 == 0 ) {
         scanTxt-=1;
     }
     if(scanTxt < -myfont.getStringBoundingBox(message, 0, 0).width) {
         scanTxt = 16;
+        message = "";
     }
     
     
@@ -334,6 +355,8 @@ void testApp::draw() {
     
     
 }
+
+
 
 void testApp::keyPressed(int key) {
 	if(key == 'r') {
