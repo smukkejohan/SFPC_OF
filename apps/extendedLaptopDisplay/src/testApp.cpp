@@ -40,10 +40,7 @@ using namespace ofxCv;
 void testApp::onKeyloggerEvent(ofxKeyloggerEvent& ev) {
     //cout << "got key:" << (char)ev.key << endl;
     
-    
     message += (char)ev.key;
-    
-    
 }
 
 void testApp::setup() {

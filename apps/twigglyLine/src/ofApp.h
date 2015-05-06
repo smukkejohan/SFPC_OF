@@ -20,18 +20,18 @@ public:
     void customDraw() {
         ofFill();
         ofColor col;
-        col = ofColor(255,255,255, 230);
+        col = ofColor(255,255,255, 255);
         //col.setHueAngle(0.5);
         //ofSetColor(20, 255, 255, 230);
         //col.set(abs(posHighPass.value().x)*5.0,abs(posHighPass.value().y)*5.0,abs(posHighPass.value().z)*5.0, 200);
         
-        col.setBrightness((abs(posHighPass.value().x)+abs(posHighPass.value().y)+abs(posHighPass.value().z))*10);
+        col.setBrightness((abs(posHighPass.value().x)+abs(posHighPass.value().y)+abs(posHighPass.value().z))*20);
         
         col.setSaturation((abs(posHighPass.value().x)+abs(posHighPass.value().y)+abs(posHighPass.value().z))*10);
         
         ofSetColor(col);
         
-        ofDrawBox(0, 0, 0, 10);
+        //ofDrawBox(0, 0, 0, 10);
         ofNoFill();
         
         ofSetColor(255);

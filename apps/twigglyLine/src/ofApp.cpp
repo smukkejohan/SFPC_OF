@@ -93,7 +93,7 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-    ofBackground(255,255,255);
+    ofBackground(0,0,0);
     
     ofEnableAlphaBlending();
     ofEnableLighting();
@@ -105,8 +105,8 @@ void ofApp::draw(){
     for(int i=0; i<links.size(); i++) {
 
         if(links[i].getParent()){
-
-            //ofLine(links[i].getGlobalPosition(), links[i].getParent()->getGlobalPosition());
+            
+            ofLine(links[i].getGlobalPosition(), links[i].getParent()->getGlobalPosition());
         }
         
         
