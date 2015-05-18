@@ -7,21 +7,22 @@
 //========================================================================
 int main()
 {
+	
 	MSA::ofxCocoa::InitSettings			initSettings;
 	initSettings.isOpaque				= true;
 	initSettings.windowLevel			= kCGMaximumWindowLevelKey;
 	initSettings.hasWindowShadow		= false;
 	initSettings.numFSAASamples			= true;
-	initSettings.initRect.size.width	= 1600;
-	initSettings.initRect.size.height	= 1050;
+	initSettings.initRect.size.width	= 40;
+	initSettings.initRect.size.height	= 40;
     initSettings.initRect.origin.x      = 0;
     initSettings.initRect.origin.y      = 0;
     
 	initSettings.windowMode				= OF_WINDOW;
 	
 	// to go fullscreen across all windows:
-	initSettings.windowStyle			= NSBorderlessWindowMask;
-	initSettings.initRect				= MSA::ofxCocoa::rectForMainScreen();
+	//initSettings.windowStyle			= NSBorderlessWindowMask;
+	//initSettings.initRect				= MSA::ofxCocoa::rectForMainScreen();
 //	initSettings.initRect				= MSA::ofxCocoa::rectForAllScreens();
     
     MSA::ofxCocoa::setSyncToDisplayLink(true);

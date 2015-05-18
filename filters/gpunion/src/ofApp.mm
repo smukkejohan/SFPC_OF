@@ -4,8 +4,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     setWindowTransparent();
-    
-    ofSetFrameRate(30);
+    ofSetFrameRate(25);
     
     grabwidth = 250;
     MSA::ofxCocoa::setCaptureExternalMouseEvents(true);
@@ -27,11 +26,11 @@ void ofApp::draw(){
     
     float travel = ofClamp(windowPos.distance(lastWindowPos), 0, 20);
     if(travel == 0) {
-        alpha *= 0.6;
+        alpha *= 0.8;
     } else {
         alpha += 0.01 + travel/200;
     }
-    alpha = ofClamp(alpha, 0, 1);
+    alpha = ofClamp(alpha, 0.1, 1);
     
     lastWindowPos = windowPos;
     
@@ -42,7 +41,6 @@ void ofApp::draw(){
     
     
     ofSetColor(255, 255, 255, 100);
-    
     
     if(ofGetFrameNum() % 30 == 0) {
     if(ofRandom(1.0)<0.8) {
@@ -115,10 +113,10 @@ void ofApp::draw(){
     ofPushMatrix();
     
     ofTranslate(windowPos.x-grabwidth/2,windowPos.y-grabwidth/2);
-    ofSetColor(255, 255, 255, 80*alpha);
+    ofSetColor(255, 255, 255, 120*alpha);
     screenGrabber.draw(0,0);
     
-    ofSetColor(255, 255, 255, 220*alpha);
+    ofSetColor(255, 255, 255, 255);
     screenGrabber.getTextureReference().drawSubsection(grabwidth/4, grabwidth/4, grabwidth/2, grabwidth/2, grabwidth/2, grabwidth/2, grabwidth, grabwidth);
     
     ofPopMatrix();

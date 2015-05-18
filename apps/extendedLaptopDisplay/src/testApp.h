@@ -127,13 +127,22 @@ public:
     
     ofTrueTypeFont myfont;
     
-    
-    
     string message;
     float scanTxt=16;
     
     void onKeyloggerEvent(ofxKeyloggerEvent& ev);
     
     int state;
-	
+    
+    float lastMsgTimeStamp=0;
+    float msgInterval=10;
+    float pauseTimeStamp=0;
+    float msgPauseInterval=20;
+    bool pauseState = true;
+    
+    vector<string> history;
+    bool userMsg = false;
+
+
+    
 };

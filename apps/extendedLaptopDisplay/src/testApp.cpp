@@ -45,7 +45,18 @@ void testApp::onKeyloggerEvent(ofxKeyloggerEvent& ev) {
 
 void testApp::setup() {
     
-      ofxKeylogger::addListener(this, &testApp::onKeyloggerEvent);
+    // preload some good stuff
+    
+    history.push_back("Listen to your breath!");
+    history.push_back("How are you?");
+    history.push_back("What do you see?");
+    history.push_back("What is your name?");
+    history.push_back("Come talk to me.");
+    history.push_back("Look over my shoulder.");
+    history.push_back("Look me in the eyes.");
+    history.push_back("Do you come here often?");
+    
+    ofxKeylogger::addListener(this, &testApp::onKeyloggerEvent);
     
 	ofSetFrameRate(30);
 	ofSetVerticalSync(true);
@@ -82,7 +93,7 @@ void testApp::setup() {
     myfont.loadFont("TI99Basic.ttf", 16);
     //myfont.loadFont("DCGamer16.ttf", 8);
     
-    message = "Hello what is your name?";
+    message = "";
     
     
         tracker.setup();
@@ -253,78 +264,68 @@ void testApp::draw() {
     ofBackground(0);
     ofSetColor(255);
     
-    /* glBegin(GL_POINTS);
-     glVertex2d(ofMap(mouseX, 0, 200, 0, 8, true), ofMap(mouseY, 0, 200, 0, 8, true));
-     glEnd();
-     */
-    /*
-     // happy smiley
-     ofNoFill();
-     ofCircle(4, 4, 3.5);
-     
-     glBegin(GL_POINTS);
-     glVertex2d(2, 2);
-     glVertex2d(5, 2);
-     glVertex2d(5, 4);
-     glVertex2d(4, 5);
-     glVertex2d(3, 5);
-     glVertex2d(2, 4);
-     glEnd();
-     ofCircle(4, 4, 3.5);*/
-    //ofNoFill();
-    
-    /*
-     glBegin(GL_POINTS);
-     glVertex2d(2, 2);
-     glVertex2d(5, 2);
-     glVertex2d(5, 4);
-     glVertex2d(4, 5);
-     glVertex2d(3, 5);
-     glVertex2d(2, 4);
-     glEnd();
-     */
-    
     if(message.length() > 0) {
-    
-        ofPushMatrix();
         
+        lastMsgTimeStamp = ofGetElapsedTimef();
+        ofPushMatrix();
         ofTranslate(scanTxt, 0);
         myfont.drawString(message, 0, 8);
-        
         ofPopMatrix();
-    
+        
     } else {
         
-        if(rowGraph.getState() == 1) {
-            eyeClosed.draw(0,0, 8, 8);
-            eyeClosed.draw(8,0, 8, 8);
+        if(tracker.getFound()) {
+            pauseState = false;
+            
+            if(rowGraph.getState() == 1) {
+                eyeClosed.draw(0,0, 8, 8);
+                eyeClosed.draw(8,0, 8, 8);
+            } else {
+                eyeOpen.draw(0, 0, 8, 8);
+                eyeOpen.draw(8, 0, 8, 8);
+            }
+            
+            if(ofGetElapsedTimef() - lastMsgTimeStamp > msgInterval) {
+                //message = "Listen to your breath!";
+                message = history[(int)ofRandom(history.size())];
+                userMsg = false;
+                // choose from list of messages
+                pauseState = false;
+            }
+
+            
             
         } else {
-            eyeOpen.draw(0, 0, 8, 8);
-            eyeOpen.draw(8, 0, 8, 8);
+            if(message.empty()) {
+                if(!pauseState) {
+                    pauseTimeStamp = ofGetElapsedTimef();
+                    pauseState = true;
+                }
+                if(ofGetElapsedTimef() - pauseTimeStamp > msgPauseInterval) {
+                    //message = ":::"; // draw a nice pattern instead
+                    message = history[(int)ofRandom(history.size())];//":::";
+                    userMsg = false;
+                    
+                    pauseState = false;
+                    
+                }
+            }
         }
+    }
 
-        
-        
-    }
-    
-    
-    
-    
-    if(ofGetElapsedTimeMillis()/50 % 2 == 0 ) {
-        scanTxt-=1;
-    }
+    scanTxt -= 20 / ofGetFrameRate();
     if(scanTxt < -myfont.getStringBoundingBox(message, 0, 0).width) {
-        scanTxt = 16;
+        scanTxt = 16*2;
+        
+        if(userMsg /*&& message.length() > 8*/) history.push_back(message);
+        
         message = "";
+        userMsg = true;
     }
-    
     
     matrixFbo1.end();
-    
     matrixFbo1.readToPixels(tmpPix);
     matrix1.setFromPixels(tmpPix);
-    
     
 	ofSetColor(255);
 	cam.draw(0, 0, cam.getWidth(), cam.getHeight());
@@ -332,7 +333,7 @@ void testApp::draw() {
 	leftRectImg.draw();
 	rightRectImg.draw();
 	ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, ofGetHeight() - 20);
-	
+
 	ofTranslate(10, 10);
 	eyeFbo.draw(0, 0);
 	
@@ -354,12 +355,7 @@ void testApp::draw() {
     updateMatrix(1);
     updateMatrix(2);
     
-     //myfont.drawString("Hello", 0, 0);
-    
-    
 }
-
-
 
 void testApp::keyPressed(int key) {
 	if(key == 'r') {

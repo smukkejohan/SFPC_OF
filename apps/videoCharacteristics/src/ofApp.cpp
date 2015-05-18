@@ -50,35 +50,42 @@ void ofApp::draw(){
     
     
     float frameAvgBrightness = 0;
+    ofColor frameAvgColor;
     
     // let's move through the "RGB(A)" char array
     // using the red pixel to control the size of a circle.
+    
+    float r,g,b = 0;
+    
     for (int i = 0; i < 320; i++){
         for (int j = 0; j < 240; j++){
-            unsigned char r = pixels[(j * 320 + i)];
-        
+            unsigned char r = pixels[(j * 320 + i)*nChannels];
+            
+            ofColor col = fingerMovie.getPixelsRef().getColor(i, j);
+            
+            r += col.r;
+            g += col.g;
+            b += col.b;
+            
             float val = 1 - ((float)r / 255.0f);
             frameAvgBrightness += val;
             //ofCircle(400 + i,20+j,10*val);
         }
     }
     
+    frameAvgColor = ofColor(r/(320*240), g/(320*240), b/(320*240));
+    
     float avgB = frameAvgBrightness/(320*240);
     
     cout<<frameAvgBrightness<<endl;
     cout<<avgB<<endl;
     
-    ofSetColor(avgB*255);
+    ofSetColor(frameAvgColor);
     ofCircle(400, 200, 40, 40);
-    
-    
     
     /*if(fingerMovie.getIsMovieDone()){
         fingerMovie.nextFrame();
     }*/
-    
-    
-    
     
 
     ofSetHexColor(0x000000);
